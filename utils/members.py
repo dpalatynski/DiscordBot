@@ -6,15 +6,17 @@ class Members(commands.Cog):
         self.client = client
 
     @commands.command(name='members',
-                      brief='TBA',
-                      description='TBA',
-                      aliases=[])
+                      brief='How many server members are there?',
+                      description='-> ".members" - returns a number of members \n'
+                                  '-> ".members show" - prints all usernames')
     async def members(self, ctx, show=None):
         if show == 'show':
             members_list = []
             for member in ctx.guild.members:
                 members_list.append(str(member))
             reply = '\n'.join(sorted(members_list))
+        elif show:
+            reply = 'Do you mean ".members" or ".members show"?'
         else:
             reply = 'There are {} members of {}.'.format(len(ctx.guild.members), ctx.guild)
 
