@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Embed
 import requests
 import asyncio
 import random
@@ -56,6 +57,45 @@ class Fun(commands.Cog):
             result = str(random.randint(bottom, top))
 
         await ctx.send(result)
+
+    @commands.command(name='word',
+                      brief='Get a random word',
+                      description='-> ".word" - generates a random word')
+    async def word(self, ctx):
+        url = 'https://random-words-api.vercel.app/word'
+        response = requests.get(url).json()[0]
+        embed = Embed(title=response['word'], description=response['definition'], color=0x00ff00)
+
+        await ctx.send(embed=embed)
+
+    @commands.command(name='flip',
+                      brief='Flip a coin',
+                      description='-> ".flip" - flips a coin')
+    async def flip(self, ctx):
+        results = '%s %s' % (ctx.message.author.mention, random.choice(['tails', 'heads']))
+        await ctx.send(results)
+
+    @commands.command(name='cat',
+                      brief='Do you want to see some cute cats?',
+                      description='-> ".cat" - shows a random image of a cute cat',
+                      aliases=['kitty'])
+    async def cat(self, ctx):
+        url = 'https://cataas.com/cat?json=true'
+        response = requests.get(url).json()
+        print(response)
+        embed = Embed(title='Kitty!', color=0x00ff00)
+        embed.set_image(url='https://cataas.com/' + response['url'])
+        await ctx.send(embed=embed)
+
+    @commands.command(name='dog',
+                      brief='Do you want to see some cute dogs?',
+                      description='-> ".dog" - shows a random image of a cute dog')
+    async def dog(self, ctx):
+        url = 'https://dog.ceo/api/breeds/image/random'
+        response = requests.get(url).json()
+        embed = Embed(title='Doggy!', color=0x00ff00)
+        embed.set_image(url=response['message'])
+        await ctx.send(embed=embed)
 
 
 def setup(client):
