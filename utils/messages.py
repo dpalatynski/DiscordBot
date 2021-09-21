@@ -8,7 +8,8 @@ class Messages(commands.Cog):
     @commands.command(name='messages',
                       brief='How many messages were sent?',
                       description='-> ".messages" - returns a number of messages in this channel \n'
-                                  '-> ".messages [user]" - returns a number of messages sent in this channel by user \n'
+                                  '-> ".messages [user]" - returns a number of messages sent in this channel by a '
+                                  'particular user \n'
                                   '-> ".messages [channel]" - returns a number of messages in a mentioned channel \n'
                                   '-> ".messages [user] [channel]" or ".messages [channel] [user]" - returns a number '
                                   'of messages sent in a mentioned channel by a mentioned user')

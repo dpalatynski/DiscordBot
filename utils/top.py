@@ -11,7 +11,7 @@ class Top(commands.Cog):
                       brief='Leaderboard of messages sent',
                       description='-> ".top" - returns a leaderboard of users with the most messages sent in '
                                   'this channel \n'
-                                  '-> ".top all" - returns a leaderboard of users with the most messages in a current '
+                                  '-> ".top all" - returns a leaderboard of users with the most messages in this '
                                   'server \n'
                                   '-> ".top [channel] - returns a leaderboard of users with the most messages sent in '
                                   'a mentioned channel \n'
@@ -69,7 +69,7 @@ class Top(commands.Cog):
                       description='-> ".dailytop" - returns a leaderboard of users with the most messages sent today '
                                   'in this channel \n'
                                   '-> ".dailytop all" - returns a leaderboard of users with the most messages sent '
-                                  'today in a current server \n'
+                                  'today in this server \n'
                                   '-> ".dailytop [channel] - returns a leaderboard of users with the most messages '
                                   'sent today in a mentioned channel \n'
                                   '-> ".dailytop [channel] [limit]" - returns a limited leaderboard of users with the '

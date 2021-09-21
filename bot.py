@@ -16,7 +16,8 @@ async def on_ready():
     client.load_extension("utils.members")
     client.load_extension("utils.top")
     client.load_extension("utils.fun")
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="Python"))
+    client.load_extension("utils.stats")
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="Live version"))
 
 
 @client.command(hidden=True)

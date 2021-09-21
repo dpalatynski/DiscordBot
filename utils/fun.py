@@ -3,6 +3,7 @@ from discord import Embed
 import requests
 import asyncio
 import random
+from bs4 import BeautifulSoup
 
 
 class Fun(commands.Cog):
@@ -10,7 +11,7 @@ class Fun(commands.Cog):
         self.client = client
 
     @commands.command(name='joke',
-                      brief='Let\'s tell a joke!',
+                      brief='Let me tell you a joke',
                       description='-> ".joke" - generates a random joke')
     async def joke(self, ctx):
         url = 'https://official-joke-api.appspot.com/random_joke'
@@ -32,7 +33,7 @@ class Fun(commands.Cog):
     @commands.command(name='roll',
                       brief='Roll a dice',
                       description='-> ".roll" - rolls a dice \n'
-                                  '-> ".roll [number]" - rolls a number of dices')
+                                  '-> ".roll [number]" - rolls specific number of dice')
     async def roll(self, ctx, number_of_dice=None):
         try:
             number_of_dice = int(number_of_dice)
@@ -46,7 +47,7 @@ class Fun(commands.Cog):
         await ctx.send(results[:-2])
 
     @commands.command(name='randint',
-                      brief='Get a random integer',
+                      brief='Get a random number',
                       description='-> ".randint" - generates randomly 0 or 1 \n'
                                   '-> ".randint [min] [max]" - generates a random number in a given interval')
     async def randint(self, ctx, bottom=0, top=1):
@@ -58,10 +59,10 @@ class Fun(commands.Cog):
 
         await ctx.send(result)
 
-    @commands.command(name='word',
+    @commands.command(name='randword',
                       brief='Get a random word',
-                      description='-> ".word" - generates a random word')
-    async def word(self, ctx):
+                      description='-> ".randword" - generates a random word')
+    async def randword(self, ctx):
         url = 'https://random-words-api.vercel.app/word'
         response = requests.get(url).json()[0]
         embed = Embed(title=response['word'], description=response['definition'], color=0x00ff00)
@@ -76,25 +77,38 @@ class Fun(commands.Cog):
         await ctx.send(results)
 
     @commands.command(name='cat',
-                      brief='Do you want to see some cute cats?',
+                      brief='Do you want to see cute cats?',
                       description='-> ".cat" - shows a random image of a cute cat',
                       aliases=['kitty'])
     async def cat(self, ctx):
         url = 'https://cataas.com/cat?json=true'
         response = requests.get(url).json()
-        print(response)
         embed = Embed(title='Kitty!', color=0x00ff00)
         embed.set_image(url='https://cataas.com/' + response['url'])
         await ctx.send(embed=embed)
 
     @commands.command(name='dog',
-                      brief='Do you want to see some cute dogs?',
+                      brief='Do you want to see cute dogs?',
                       description='-> ".dog" - shows a random image of a cute dog')
     async def dog(self, ctx):
         url = 'https://dog.ceo/api/breeds/image/random'
         response = requests.get(url).json()
         embed = Embed(title='Doggy!', color=0x00ff00)
         embed.set_image(url=response['message'])
+        await ctx.send(embed=embed)
+
+    @commands.command(name='word',
+                      brief='Let me tell you the word of the day',
+                      description='-> ".word" - returns the words of the day')
+    async def word(self, ctx):
+        url = 'https://www.urbandictionary.com/'
+        content = requests.get(url)
+        soup = BeautifulSoup(content.text, 'html.parser')
+        word = soup.find('div', class_='def-header').text
+        meaning = soup.find('div', class_='meaning').text.encode('ascii', 'ignore')
+
+        embed = Embed(title="Word of the day: " + word, description=meaning.decode('utf-8'), color=0x00ff00)
+
         await ctx.send(embed=embed)
 
 
