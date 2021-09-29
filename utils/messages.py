@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Embed
 
 
 class Messages(commands.Cog):
@@ -26,7 +27,6 @@ class Messages(commands.Cog):
                 reply = "User {} sent {} message in the channel {}.".format(_user, counter, channel.mention)
             else:
                 reply = "User {} sent {} messages in the channel {}.".format(_user, counter, channel.mention)
-            await ctx.send(reply)
         elif _user:
             async for message in ctx.channel.history(limit=None):
                 if str(message.author.id) == str(_user)[3:-1]:
@@ -35,7 +35,6 @@ class Messages(commands.Cog):
                 reply = "User {} sent {} message in the channel {}.".format(_user, counter, ctx.channel.mention)
             else:
                 reply = "User {} sent {} messages in the channel {}.".format(_user, counter, ctx.channel.mention)
-            await ctx.send(reply)
         elif _channel:
             channel = self.client.get_channel(int(_channel[2:-1]))
             async for _ in channel.history(limit=None):
@@ -44,7 +43,6 @@ class Messages(commands.Cog):
                 reply = "There was {} message in the channel {}.".format(counter, channel.mention)
             else:
                 reply = "There were {} messages in the channel {}.".format(counter, channel.mention)
-            await ctx.send(reply)
         else:
             async for _ in ctx.channel.history(limit=None):
                 counter += 1
@@ -52,7 +50,19 @@ class Messages(commands.Cog):
                 reply = "There was {} message in the channel {}.".format(counter, ctx.channel.mention)
             else:
                 reply = "There were {} messages in the channel {}.".format(counter, ctx.channel.mention)
-            await ctx.send(reply)
+
+        embed = Embed(color=0x2ca5f1)
+        embed.add_field(name="Messages", value=reply)
+
+        await ctx.send(embed=embed)
+
+    @messages.error
+    async def messages_eror(self, ctx, error):
+        if error:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I can\'t count the number of messages right now.')
+
+            await ctx.send(embed=embed)
 
 
 def setup(client):

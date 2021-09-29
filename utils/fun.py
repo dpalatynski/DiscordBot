@@ -28,7 +28,10 @@ class Fun(commands.Cog):
         url = 'https://uselessfacts.jsph.pl/random.json?language=en'
         fact = requests.get(url).json()
 
-        await ctx.send(fact['text'])
+        embed = Embed(color=0x2ca5f1)
+        embed.add_field(name="Random useless fact", value=fact['text'])
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='roll',
                       brief='Roll a dice',
@@ -40,11 +43,15 @@ class Fun(commands.Cog):
         except ValueError and TypeError:
             number_of_dice = 1
 
-        results = '%s You rolled: ' % ctx.message.author.mention
+        numbers = {1: ':one:', 2: ':two:', 3: ':three:', 4: ':four:', 5: ':five:', 6: ':six:'}
+        results = ''
         for i in range(number_of_dice):
-            results += str(random.randint(1, 6)) + ', '
+            results += str(numbers[random.randint(1, 6)]) + ', '
 
-        await ctx.send(results[:-2])
+        embed = Embed(color=0x2ca5f1)
+        embed.add_field(name='%s, you rolled: ' % ctx.message.author.name, value=results[:-2])
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='randint',
                       brief='Get a random number',
@@ -52,20 +59,24 @@ class Fun(commands.Cog):
                                   '-> ".randint [min] [max]" - generates a random number in a given interval')
     async def randint(self, ctx, bottom=0, top=1):
         if top < bottom:
-            result = 'The second number should be higher or equal than the first one.'
+            result = ':no_entry: The second number should be higher or equal than the first one.'
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
         else:
             bottom, top = int(bottom), int(top)
             result = str(random.randint(bottom, top))
+            embed = Embed(color=0x2ca5f1)
+            embed.add_field(name='%s, your random number: ' % ctx.message.author.name, value=result)
 
-        await ctx.send(result)
+        await ctx.send(embed=embed)
 
     @commands.command(name='randword',
                       brief='Get a random word',
-                      description='-> ".randword" - generates a random word')
+                      description='-> ".word" - generates a random word')
     async def randword(self, ctx):
         url = 'https://random-words-api.vercel.app/word'
         response = requests.get(url).json()[0]
-        embed = Embed(title=response['word'], description=response['definition'], color=0x00ff00)
+        embed = Embed(title=response['word'], description=response['definition'], color=0x2ca5f1)
 
         await ctx.send(embed=embed)
 
@@ -73,8 +84,10 @@ class Fun(commands.Cog):
                       brief='Flip a coin',
                       description='-> ".flip" - flips a coin')
     async def flip(self, ctx):
-        results = '%s %s' % (ctx.message.author.mention, random.choice(['tails', 'heads']))
-        await ctx.send(results)
+        embed = Embed(title='%s, your result: ' % ctx.message.author.name,
+                      description=random.choice(['tails', 'heads']), color=0x2ca5f1)
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='cat',
                       brief='Do you want to see cute cats?',
@@ -83,7 +96,7 @@ class Fun(commands.Cog):
     async def cat(self, ctx):
         url = 'https://cataas.com/cat?json=true'
         response = requests.get(url).json()
-        embed = Embed(title='Kitty!', color=0x00ff00)
+        embed = Embed(title='Kitty!', color=0x2ca5f1)
         embed.set_image(url='https://cataas.com/' + response['url'])
         await ctx.send(embed=embed)
 
@@ -93,7 +106,7 @@ class Fun(commands.Cog):
     async def dog(self, ctx):
         url = 'https://dog.ceo/api/breeds/image/random'
         response = requests.get(url).json()
-        embed = Embed(title='Doggy!', color=0x00ff00)
+        embed = Embed(title='Doggy!', color=0x2ca5f1)
         embed.set_image(url=response['message'])
         await ctx.send(embed=embed)
 
@@ -107,9 +120,16 @@ class Fun(commands.Cog):
         word = soup.find('div', class_='def-header').text
         meaning = soup.find('div', class_='meaning').text.encode('ascii', 'ignore')
 
-        embed = Embed(title="Word of the day: " + word, description=meaning.decode('utf-8'), color=0x00ff00)
+        embed = Embed(title="Word of the day: " + word, description=meaning.decode('utf-8'), color=0x2ca5f1)
 
         await ctx.send(embed=embed)
+
+    async def cog_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandInvokeError):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I can\'t play with you right now. Please try again later.')
+
+            await ctx.send(embed=embed)
 
 
 def setup(client):

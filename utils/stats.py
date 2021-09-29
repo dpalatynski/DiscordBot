@@ -36,7 +36,10 @@ class Stats(commands.Cog):
     @covid_statistics.error
     async def covid_statistics_eror(self, ctx, error):
         if error:
-            await ctx.send('Unable to find statistics for your entry.')
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Unable to find statistics for your entry.')
+
+            await ctx.send(embed=embed)
 
     @commands.command(name='population-statistics',
                       brief='Number of population in a specific country',
@@ -59,7 +62,10 @@ class Stats(commands.Cog):
     @population_statistics.error
     async def covid_statistics_eror(self, ctx, error):
         if error:
-            await ctx.send('Unable to find statistics for your entry.')
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Unable to find statistics for your entry.')
+
+            await ctx.send(embed=embed)
 
 
 def setup(client):
@@ -110,11 +116,11 @@ async def create_message(values, country, information, stats):
         country = country[0].upper() + country[1:]
 
     if stats == 'covid':
-        embed = Embed(title='COVID-19 Statistics for ' + country, color=0x00ff00)
+        embed = Embed(title='COVID-19 Statistics for ' + country, color=0x2ca5f1)
         embed.set_thumbnail(url='https://www.nps.gov/aboutus/news/images/CDC-coronavirus-image-23311-for-web.jpg?'
                                 'maxwidth=650&autorotate=false')
     else:
-        embed = Embed(title='Population of ' + country, color=0x00ff00)
+        embed = Embed(title='Population of ' + country, color=0x2ca5f1)
         embed.set_thumbnail(url='https://www.mcicon.com/wp-content/uploads/2021/01/People_Human_1-copy-5.jpg')
     for i in range(len(information)):
         if values[i][0] == "+":

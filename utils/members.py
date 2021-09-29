@@ -16,12 +16,21 @@ class Members(commands.Cog):
             for member in ctx.guild.members:
                 members_list.append(str(member))
             reply = '\n'.join(sorted(members_list))
-        elif show:
-            reply = 'Do you mean ".members" or ".members show"?'
         else:
-            reply = 'There are {} members of {}.'.format(len(ctx.guild.members), ctx.guild)
+            reply = 'There are **{}** members of {}.'.format(len(ctx.guild.members), ctx.guild)
 
-        await ctx.send(reply)
+        embed = Embed(color=0x2ca5f1)
+        embed.add_field(name="Members", value=reply)
+
+        await ctx.send(embed=embed)
+
+    @members.error
+    async def members_eror(self, ctx, error):
+        if error:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I can\'t count the number of members right now.')
+
+            await ctx.send(embed=embed)
 
     @commands.command(name='user',
                       brief='Who are you?',
@@ -30,7 +39,7 @@ class Members(commands.Cog):
     async def user(self, ctx, user: Member = None):
         if user is None:
             user = ctx.message.author
-        embed = Embed(title=user.display_name, color=0x00ff00)
+        embed = Embed(title=user.display_name, color=0x2ca5f1)
         embed.set_thumbnail(url=user.avatar_url)
         embed.add_field(name='Nickname', value=user.name + '#' + user.discriminator, inline=False)
         embed.add_field(name='Joined At', value=user.joined_at.date())
@@ -47,7 +56,10 @@ class Members(commands.Cog):
     @user.error
     async def user_eror(self, ctx, error):
         if error:
-            await ctx.send('Unable to find information about this account.')
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Unable to find information about this account.')
+
+            await ctx.send(embed=embed)
 
     @commands.command(name='avatar',
                       brief='View an avatar',
@@ -56,16 +68,19 @@ class Members(commands.Cog):
     async def avatar(self, ctx, user: Member = None):
         if user is None:
             user = ctx.message.author
-        embed = Embed(title=user.display_name, color=0x00ff00)
+        embed = Embed(title=user.display_name, color=0x2ca5f1)
         embed.set_image(url=user.avatar_url)
         embed.set_footer(text=user.name + '#' + user.discriminator)
 
         await ctx.send(embed=embed)
 
-    @user.error
+    @avatar.error
     async def avatar_eror(self, ctx, error):
         if error:
-            await ctx.send('Unable to look at this avatar.')
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Unable to look at this avatar.')
+
+            await ctx.send(embed=embed)
 
 
 def setup(client):
@@ -92,8 +107,3 @@ def get_activities(activities):
             message += ':video_game:  Playing: ' + activity.name + ' \n'
 
     return message
-
-
-
-def setup(client):
-    client.add_cog(Members(client))
