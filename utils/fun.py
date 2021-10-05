@@ -72,7 +72,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='randword',
                       brief='Get a random word',
-                      description='-> ".word" - generates a random word')
+                      description='-> ".randword" - generates a random word')
     async def randword(self, ctx):
         url = 'https://random-words-api.vercel.app/word'
         response = requests.get(url).json()[0]
@@ -96,7 +96,7 @@ class Fun(commands.Cog):
     async def cat(self, ctx):
         url = 'https://cataas.com/cat?json=true'
         response = requests.get(url).json()
-        embed = Embed(title='Kitty!', color=0x2ca5f1)
+        embed = Embed(title=':cat: Kitty!', color=0x2ca5f1)
         embed.set_image(url='https://cataas.com/' + response['url'])
         await ctx.send(embed=embed)
 
@@ -106,7 +106,7 @@ class Fun(commands.Cog):
     async def dog(self, ctx):
         url = 'https://dog.ceo/api/breeds/image/random'
         response = requests.get(url).json()
-        embed = Embed(title='Doggy!', color=0x2ca5f1)
+        embed = Embed(title=':dog: Doggy!', color=0x2ca5f1)
         embed.set_image(url=response['message'])
         await ctx.send(embed=embed)
 
@@ -122,6 +122,17 @@ class Fun(commands.Cog):
 
         embed = Embed(title="Word of the day: " + word, description=meaning.decode('utf-8'), color=0x2ca5f1)
 
+        await ctx.send(embed=embed)
+
+    @commands.command(name='meme',
+                      brief='Let\'s laugh together',
+                      description='-> ".meme" - sends a funny meme',
+                      aliases=['memes', 'mem'])
+    async def meme(self, ctx):
+        url = 'https://meme-api.herokuapp.com/gimme'
+        response = requests.get(url).json()
+        embed = Embed(title='Here you are!', color=0x2ca5f1)
+        embed.set_image(url=response['url'])
         await ctx.send(embed=embed)
 
     async def cog_command_error(self, ctx, error):
