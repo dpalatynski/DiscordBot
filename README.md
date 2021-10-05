@@ -6,7 +6,7 @@
 </h1>
 <h2> Who is Dracks? </h2>
 Dracks is a Discord Bot written in Python using <a href="https://github.com/Rapptz/discord.py/">discord.py</a> library.
-Dracks is a little monster, whose cuteness and purity is ready to make your free time pleasant. You can play with him using different commands, receive some fancy memes, ask for various server statistics, check situations through all the world, and a lot more!
+Dracks is a little dragon whose cuteness and purity is ready to make your free time pleasant. You can play with him using different commands, receive fancy memes, ask for various server statistics, check situations through all the world, and a lot more!
 <br>
 <h2> What Dracks can tell you? </h2>
 - who sent the most messages in your guild today <br>
