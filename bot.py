@@ -17,6 +17,7 @@ async def on_ready():
     client.load_extension("utils.top")
     client.load_extension("utils.fun")
     client.load_extension("utils.stats")
+    client.load_extension("utils.admin")
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="Live version"))
 
 
