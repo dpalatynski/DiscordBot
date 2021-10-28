@@ -1,8 +1,9 @@
 from discord.ext.commands import Bot
 import discord
+import os
 
 
-TOKEN = 'token'
+TOKEN = os.environ['BOT_TOKEN_DRACKS']
 BOT_PREFIX = '.'
 
 intents = discord.Intents.all()

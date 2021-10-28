@@ -33,13 +33,13 @@ class Stats(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @covid_statistics.error
+    """@covid_statistics.error
     async def covid_statistics_eror(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Unable to find statistics for your entry.')
 
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed)"""
 
     @commands.command(name='population-statistics',
                       brief='Number of population in a specific country',
@@ -80,7 +80,7 @@ def create_table_statistics(url, table_name, starting_row):
     :param starting_row: starting row from table
     :return: table with statistics
     """
-    soup = BeautifulSoup(requests.get(url).text, 'lxml')
+    soup = BeautifulSoup(requests.get(url).text, 'html.parser')
     table = soup.find('table', table_name)
 
     headers = []
