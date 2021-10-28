@@ -82,6 +82,23 @@ class Members(commands.Cog):
 
             await ctx.send(embed=embed)
 
+    @commands.command(name='roles',
+                      brief='Shows names of all roles',
+                      description='-> ".roles " - returns names of all roles \n')
+    async def roles(self, ctx):
+        roles = get_roles(ctx.guild.roles)
+        embed = Embed(title='Roles: ', description=roles.replace(',', '\n'), color=0x2ca5f1)
+
+        await ctx.send(embed=embed)
+
+    @roles.error
+    async def roles_eror(self, ctx, error):
+        if error:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Unable to display roles.')
+
+            await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Members(client))

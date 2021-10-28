@@ -55,6 +55,36 @@ class Admin(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name='deletemessages',
+                      brief='Delete last [number] messages',
+                      description='-> ".delemessages [number]" - deletes a specified number of messages in '
+                                  'current channel')
+    @commands.has_permissions(administrator=True)
+    async def deletemessages(self, ctx, number):
+        if int(number) > 10:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':no_entry: You can\'t delete more than 10 messages.')
+
+            await ctx.send(embed=embed)
+        else:
+            async for message in ctx.channel.history(limit=int(number)):
+                await message.delete()
+
+    @deletemessages.error
+    async def deletemessages_eror(self, ctx, error):
+        if isinstance(error, commands.errors.MissingPermissions):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':no_entry: You are missing Administrator permission to run this '
+                                                  'command.')
+        elif isinstance(error, commands.errors.MissingRequiredArgument):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':warning: Please specify the number of messages to delete')
+        else:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I\'m unable to delete messages')
+
+        await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Admin(client))
