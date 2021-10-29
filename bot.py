@@ -1,6 +1,8 @@
 from discord.ext.commands import Bot
 import discord
 import os
+from flask import Flask
+from threading import Thread
 
 
 TOKEN = os.environ['BOT_TOKEN_DRACKS']
@@ -9,10 +11,19 @@ BOT_PREFIX = '.'
 intents = discord.Intents.all()
 client = Bot(command_prefix=BOT_PREFIX, intents=intents)
 
+app = Flask("")
+
+@app.route('/')
+def home():
+  return("Bot is online!")
+
+
+def run():
+  app.run(host='0.0.0.0',port=8080)
+
 
 @client.event
 async def on_ready():
-    print('Bot is online!')
     client.load_extension("utils.messages")
     client.load_extension("utils.members")
     client.load_extension("utils.top")
@@ -27,4 +38,5 @@ async def load(ctx, extension):
     client.load_extension(f'utils.{extension}')
 
 
+run()
 client.run(TOKEN)
