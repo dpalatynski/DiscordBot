@@ -22,8 +22,14 @@ def run():
   app.run(host='0.0.0.0',port=8080)
 
 
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+
 @client.event
 async def on_ready():
+    print('Bot is online!')
     client.load_extension("utils.messages")
     client.load_extension("utils.members")
     client.load_extension("utils.top")
@@ -38,5 +44,6 @@ async def load(ctx, extension):
     client.load_extension(f'utils.{extension}')
 
 
-run()
+keep_alive()
 client.run(TOKEN)
+
