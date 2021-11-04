@@ -56,18 +56,18 @@ class Admin(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='deletemessages',
-                      brief='Delete last [number] messages',
+                      brief='Delete last x messages',
                       description='-> ".delemessages [number]" - deletes a specified number of messages in '
                                   'current channel')
     @commands.has_permissions(administrator=True)
     async def deletemessages(self, ctx, number):
-        if int(number) > 10:
+        if int(number) > 11:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Warning', value=':no_entry: You can\'t delete more than 10 messages.')
 
             await ctx.send(embed=embed)
         else:
-            async for message in ctx.channel.history(limit=int(number)):
+            async for message in ctx.channel.history(limit=int(number)+1):
                 await message.delete()
 
     @deletemessages.error

@@ -1,8 +1,10 @@
 from discord.ext import commands
-from discord import Embed
+from discord import Embed, File
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
+import os
+import matplotlib.pyplot as plt
 
 
 class Stats(commands.Cog):
@@ -33,13 +35,46 @@ class Stats(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    """@covid_statistics.error
+    @covid_statistics.error
     async def covid_statistics_eror(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Unable to find statistics for your entry.')
 
-            await ctx.send(embed=embed)"""
+            await ctx.send(embed=embed)
+
+    @commands.command(name='covid-active-cases',
+                      brief='Get COVID-19 active cases plot',
+                      description='-> ".covidactive" - returns COVID-19 statistics for the whole world \n'
+                                  '-> ".covidactive [country]" - returns COVID-19 statistics for a specific country',
+                      aliases=['covid_active', 'covidactive', 'covid-active', 'covid_active_cases'])
+    async def covid_active_cases(self, ctx, country):
+        cwd = os.getcwd()
+        active_cases = await find_covid_statistics(country)
+        plt.style.use("Solarize_Light2")
+        plt.plot(active_cases)
+        plt.title("Active cases in %s" % country, fontsize=20)
+        plt.ylabel('Number of active cases', fontsize=18)
+        plt.xlabel('Days since the begginning of pandemic', fontsize=18)
+        plt.grid()
+        plt.tight_layout()
+        plt.savefig('image.png')
+        plt.figure()
+        embed = Embed(title=("Active cases in %s" % country) , color=0x2ca5f1)
+        file = File(cwd + "\\image.png", filename="image.png")
+        embed.set_image(url="attachment://image.png")
+        await ctx.send(file=file, embed=embed)
+
+    @covid_active_cases.error
+    async def covid_active_cases_eror(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':warning: Please specify a country for active cases graph')
+        else:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Unable create a graph for your entry.')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='population-statistics',
                       brief='Number of population in a specific country',
@@ -60,7 +95,7 @@ class Stats(commands.Cog):
         await ctx.send(embed=embed)
 
     @population_statistics.error
-    async def covid_statistics_eror(self, ctx, error):
+    async def population_statistics_eror(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Unable to find statistics for your entry.')
@@ -128,3 +163,15 @@ async def create_message(values, country, information, stats):
         embed.add_field(name=information[i], value=values[i])
 
     return embed
+
+
+async def find_covid_statistics(country):
+    country = country.lower()
+    url = f'https://www.worldometers.info/coronavirus/country/{country}/'
+    soup = BeautifulSoup(requests.get(url).text, 'html.parser').prettify()
+    start = '<script type="text/javascript">'
+    end = '</script>'
+    active_cases = (soup.split(start))[1].split(end)[0].split('data: [')[1].split('] ')[0]
+    active_cases = list(map(int, active_cases.split(',')))
+
+    return active_cases
