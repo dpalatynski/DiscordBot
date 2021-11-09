@@ -6,6 +6,7 @@ from threading import Thread
 
 
 TOKEN = os.environ['BOT_TOKEN_DRACKS']
+os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
 BOT_PREFIX = '.'
 
 intents = discord.Intents.all()

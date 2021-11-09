@@ -61,7 +61,7 @@ class Stats(commands.Cog):
         plt.savefig('image.png')
         plt.figure()
         embed = Embed(title=("Active cases in %s" % country) , color=0x2ca5f1)
-        file = File(cwd + "\\image.png", filename="image.png")
+        file = File(cwd + "/image.png", filename="image.png")
         embed.set_image(url="attachment://image.png")
         await ctx.send(file=file, embed=embed)
 
