@@ -53,6 +53,7 @@ class Stats(commands.Cog):
         active_cases = await find_covid_statistics(country)
         plt.style.use("Solarize_Light2")
         plt.plot(active_cases)
+        country = country[0].upper() + country[1:]
         plt.title("Active cases in %s" % country, fontsize=20)
         plt.ylabel('Number of active cases', fontsize=18)
         plt.xlabel('Days since the begginning of pandemic', fontsize=18)

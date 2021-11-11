@@ -135,6 +135,12 @@ class Fun(commands.Cog):
         embed.set_image(url=response['url'])
         await ctx.send(embed=embed)
 
+    @commands.command(name='ping',
+                      description='-> ".ping" - shows bot latency')
+    async def ping(self, ctx):
+        embed = Embed(title='Latency: ', description='%s ms' % (round(self.client.latency, 4)*1000), color=0x2ca5f1)
+        await ctx.send(embed=embed)
+
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
             embed = Embed(color=0xff0000)
