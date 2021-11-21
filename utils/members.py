@@ -99,6 +99,21 @@ class Members(commands.Cog):
 
             await ctx.send(embed=embed)
 
+    @commands.command(name='servers',
+                      brief='Shows number of servers supervised by Dracks',
+                      description='-> ".servers " - returns number of servers supervised by Dracks \n')
+    async def servers(self, ctx):
+        no_of_servers = len(self.client.guilds)
+        await ctx.channel.send("I'm taking care of " + str(no_of_servers) + " servers!")
+
+    @servers.error
+    async def servers_eror(self, ctx, error):
+        if error:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Something went wrong. Please try again later.')
+
+            await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Members(client))

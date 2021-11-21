@@ -138,7 +138,7 @@ class Fun(commands.Cog):
     @commands.command(name='ping',
                       description='-> ".ping" - shows bot latency')
     async def ping(self, ctx):
-        embed = Embed(title='Latency: ', description='%s ms' % (round(self.client.latency, 4)*1000), color=0x2ca5f1)
+        embed = Embed(title='Latency: ', description='%s ms' % (round(self.client.latency*1000, 2)), color=0x2ca5f1)
         await ctx.send(embed=embed)
 
     async def cog_command_error(self, ctx, error):
