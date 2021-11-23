@@ -64,6 +64,19 @@ class Messages(commands.Cog):
 
             await ctx.send(embed=embed)
 
+    @commands.command(name='poll',
+                      pass_context=True)
+    async def poll(self, ctx, *args):
+        numbers = {1: '1️⃣', 2: '2️⃣', 3: '3️⃣', 4: '4️⃣', 5: '5️⃣', 6: '6️⃣', 7: '7️⃣', 8: '8️⃣', 9: '9️⃣'}
+        context = '{}'.format('"'.join(args))
+        question = context.split('"')[0]
+        answers = context.split('"')[1:]
+        answer_message = create_answers(answers)
+        embed = Embed(title=question, description=answer_message, color=0x2ca5f1)
+        message = await ctx.send(embed=embed)
+        for i in range(1, int(len(answers))+1):
+            await message.add_reaction(numbers[i])
+
 
 def setup(client):
     client.add_cog(Messages(client))
@@ -89,3 +102,12 @@ def checkforchannel(channel_id):
         is_channel = False
 
     return is_channel
+
+
+def create_answers(answers):
+    answer = ''
+    numbers = {1: '1️⃣', 2: '2️⃣', 3: '3️⃣', 4: '4️⃣', 5: '5️⃣', 6: '6️⃣', 7: '7️⃣', 8: '8️⃣', 9: '9️⃣'}
+    for i in range(len(answers)):
+        answer += f'{numbers[i+1]}: {answers[i]} \n \n'
+
+    return answer[:-4]
