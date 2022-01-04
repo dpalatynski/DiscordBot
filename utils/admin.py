@@ -85,6 +85,29 @@ class Admin(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name='warn',
+                      brief='Give a warn to user',
+                      description='-> ".warn [user]" - warns a user \n'
+                                  '.warn [user] [reason] - warns a user with description',
+                      pass_context=True)
+    @commands.has_permissions(administrator=True)
+    async def warn(self, ctx, user, *msg):
+        embed = Embed(color=0x2ca5f1)
+        warning = f' due to {" ".join(msg)}' if len(msg) > 0 else ''
+        embed.add_field(name='Behave yourself!', value=f':warning: {user} has been warned' + warning)
+        await ctx.send(embed=embed)
+
+    @warn.error
+    async def warn_eror(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':warning: Please specify name of user')
+        else:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I\'m unable to warn now')
+
+        await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Admin(client))
