@@ -14,12 +14,15 @@ class Fun(commands.Cog):
                       brief='Let me tell you a joke',
                       description='-> ".joke" - generates a random joke')
     async def joke(self, ctx):
-        url = 'https://official-joke-api.appspot.com/random_joke'
+        url = 'https://v2.jokeapi.dev/joke/Any'
         joke = requests.get(url).json()
 
-        await ctx.send(joke["setup"])
-        await asyncio.sleep(2)
-        await ctx.send(joke['punchline'])
+        if joke['type'] == 'single':
+            await ctx.send(joke["joke"])
+        elif joke['type'] == 'twopart':
+            await ctx.send(joke["setup"])
+            await asyncio.sleep(2)
+            await ctx.send(joke['delivery'])
 
     @commands.command(name='fact',
                       brief='Do you know that ...?',
