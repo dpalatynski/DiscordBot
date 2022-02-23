@@ -154,7 +154,7 @@ class Fun(commands.Cog):
     @commands.command(name='kiks',
                       brief='...',
                       description='-> ".kiks" - ...')
-    async def fact(self, ctx):
+    async def kiks(self, ctx):
         for post in get_posts('konfliktyPL', pages=1):
             embed = Embed(color=0x2ca5f1)
             if post['image'] is not None:
