@@ -151,6 +151,19 @@ class Fun(commands.Cog):
 
             await ctx.send(embed=embed)
 
+    @commands.command(name='kiks',
+                      brief='...',
+                      description='-> ".kiks" - ...')
+    async def fact(self, ctx):
+        for post in get_posts('konfliktyPL', pages=1):
+            embed = Embed(color=0x2ca5f1)
+            if post['image'] is not None:
+                embed.set_image(url=post['image'])
+            embed.add_field(name=post['time'], value=post['text'])
+            embed.set_footer(text=post['post_id'])
+
+            await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Fun(client))
