@@ -48,4 +48,3 @@ async def load(ctx, extension):
 
 keep_alive()
 client.run(TOKEN)
-

@@ -19,7 +19,7 @@ class Admin(commands.Cog):
         await ctx.send(embed=embed)
 
     @createrole.error
-    async def createrole_eror(self, ctx, error):
+    async def createrole_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             embed = Embed(color=0xff0000)
             embed.add_field(name='Warning', value=':warning: Please specify the name of new role')
@@ -45,7 +45,7 @@ class Admin(commands.Cog):
         await ctx.send(embed=embed)
 
     @deleterole.error
-    async def deleterole_eror(self, ctx, error):
+    async def deleterole_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             embed = Embed(color=0xff0000)
             embed.add_field(name='Warning', value=':warning: Please specify the name of the role')
@@ -61,17 +61,16 @@ class Admin(commands.Cog):
                                   'current channel')
     @commands.has_permissions(administrator=True)
     async def deletemessages(self, ctx, number):
-        if int(number) > 11:
+        if int(number) > 51:
             embed = Embed(color=0xff0000)
-            embed.add_field(name='Warning', value=':no_entry: You can\'t delete more than 10 messages.')
-
+            embed.add_field(name='Warning', value=':no_entry: You can\'t delete more than 50 messages.')
             await ctx.send(embed=embed)
         else:
             async for message in ctx.channel.history(limit=int(number)+1):
                 await message.delete()
 
     @deletemessages.error
-    async def deletemessages_eror(self, ctx, error):
+    async def deletemessages_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingPermissions):
             embed = Embed(color=0xff0000)
             embed.add_field(name='Warning', value=':no_entry: You are missing Administrator permission to run this '
@@ -98,7 +97,7 @@ class Admin(commands.Cog):
         await ctx.send(embed=embed)
 
     @warn.error
-    async def warn_eror(self, ctx, error):
+    async def warn_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             embed = Embed(color=0xff0000)
             embed.add_field(name='Warning', value=':warning: Please specify name of user')

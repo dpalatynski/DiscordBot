@@ -4,6 +4,7 @@ import requests
 import asyncio
 import random
 from bs4 import BeautifulSoup
+from facebook_scraper import get_posts
 
 
 class Fun(commands.Cog):
@@ -141,7 +142,7 @@ class Fun(commands.Cog):
     @commands.command(name='ping',
                       description='-> ".ping" - shows bot latency')
     async def ping(self, ctx):
-        embed = Embed(title='Latency: ', description='%s ms' % (round(self.client.latency*1000, 2)), color=0x2ca5f1)
+        embed = Embed(title='Latency: ', description='%s ms' % (round(self.client.latency * 1000, 2)), color=0x2ca5f1)
         await ctx.send(embed=embed)
 
     async def cog_command_error(self, ctx, error):
@@ -152,17 +153,33 @@ class Fun(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(name='kiks',
-                      brief='...',
-                      description='-> ".kiks" - ...')
-    async def kiks(self, ctx):
-        for post in get_posts('konfliktyPL', pages=1):
-            embed = Embed(color=0x2ca5f1)
-            if post['image'] is not None:
-                embed.set_image(url=post['image'])
-            embed.add_field(name=post['time'], value=post['text'])
-            embed.set_footer(text=post['post_id'])
-
+                      brief='Retrieves the latest information about conflicts and disasters from Facebook\'s profile '
+                            'konfliktyPL',
+                      description='-> ".kiks" - sends the latest message \n'
+                                  '-> ".kiks [number]" - sends a number of the latest messages')
+    async def kiks(self, ctx, number_of_messages):
+        try:
+            number_of_messages = int(number_of_messages)
+        except ValueError and TypeError:
+            number_of_messages = 1
+        if number_of_messages > 10:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':no_entry: You can\'t retrieve more than 10 last messages.')
             await ctx.send(embed=embed)
+        else:
+            counter = 0
+            for post in get_posts('konfliktyPL', pages=3, cookies='cookies.txt'):
+                embed = Embed(color=0x2ca5f1)
+                if post['image'] is not None:
+                    embed.set_image(url=post['image'])
+                embed.add_field(name=post['time'], value=post['text'])
+                embed.set_footer(text=post['post_id'])
+
+                await ctx.send(embed=embed)
+
+                counter += 1
+                if counter >= number_of_messages:
+                    break
 
 
 def setup(client):
