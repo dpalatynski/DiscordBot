@@ -5,6 +5,7 @@ import asyncio
 import random
 from bs4 import BeautifulSoup
 from facebook_scraper import get_posts
+from googlesearch import search
 
 
 class Fun(commands.Cog):
@@ -180,6 +181,34 @@ class Fun(commands.Cog):
                 counter += 1
                 if counter >= number_of_messages:
                     break
+
+    @commands.command(name='search',
+                      brief='Searching for websites, which can help you solving your problem',
+                      description='-> ".search [query]" - searches for query in Google')
+    async def search(self, ctx, *args):
+        query = '{}'.format('"'.join(args))
+        response = search(query, lang='en')
+        answers = []
+        for link in response:
+            answers.append(link)
+        answers = list(dict.fromkeys(answers))
+        text = ''
+        for i, answer in enumerate(answers):
+            text += f'{i+1}. {answer} \n'
+        embed = Embed(color=0x2ca5f1)
+        embed.add_field(name=f'Result for query {query}: ', value=text)
+        await ctx.send(embed=embed)
+
+    @search.error
+    async def search_error(self, ctx, error):
+        if isinstance(error, commands.errors.CommandInvokeError):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: Access restricted. Maximum number of requests exceeded.')
+        else:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I can\'t play with you right now. Please try again later.')
+
+        await ctx.send(embed=embed)
 
 
 def setup(client):
