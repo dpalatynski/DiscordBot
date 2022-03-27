@@ -210,6 +210,31 @@ class Fun(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name='synonyms',
+                      brief='Finding synonyms of a given word',
+                      description='-> ".synonyms [word]" - finds synonyms')
+    async def synonyms(self, ctx, query):
+        url = 'https://www.thesaurus.com/browse/' + query
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, features="lxml")
+        results = soup.find_all('a', {'font-weight': 'inherit'})
+
+        amount = min(len(results), 5)
+        i = 0
+        synonyms = []
+        while len(synonyms) < amount:
+            synonyms.append(results[i].get_text()[:-1])
+            i += 1
+
+        embed = Embed(color=0x2ca5f1)
+        if len(synonyms) == 0:
+            synonyms = f'0 results for {query}'
+            embed.add_field(name=f'Synonyms of {query}: ', value=synonyms)
+        else:
+            embed.add_field(name=f'Synonyms of {query}: ', value="\n".join(synonyms))
+
+        await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Fun(client))
