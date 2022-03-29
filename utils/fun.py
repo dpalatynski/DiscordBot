@@ -235,6 +235,20 @@ class Fun(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name='wikipedia',
+                      brief='Generates random article from Wikipedia',
+                      description='-> ".wikipedia" - return a random article from Wikipedia')
+    async def wikipedia(self, ctx):
+        url = 'https://en.wikipedia.org/wiki/Special:Random'
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text)
+        title = soup.find('title').text.replace('- Wikipedia', '')
+
+        embed = Embed(color=0x2ca5f1)
+        embed.add_field(name=title, value=response.url)
+
+        await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Fun(client))
