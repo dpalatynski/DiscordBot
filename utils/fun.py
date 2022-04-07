@@ -153,35 +153,6 @@ class Fun(commands.Cog):
 
             await ctx.send(embed=embed)
 
-    @commands.command(name='kiks',
-                      brief='Retrieves the latest information about conflicts and disasters from Facebook\'s profile '
-                            'konfliktyPL',
-                      description='-> ".kiks" - sends the latest message \n'
-                                  '-> ".kiks [number]" - sends a number of the latest messages')
-    async def kiks(self, ctx, number_of_messages):
-        try:
-            number_of_messages = int(number_of_messages)
-        except ValueError and TypeError:
-            number_of_messages = 1
-        if number_of_messages > 10:
-            embed = Embed(color=0xff0000)
-            embed.add_field(name='Warning', value=':no_entry: You can\'t retrieve more than 10 last messages.')
-            await ctx.send(embed=embed)
-        else:
-            counter = 0
-            for post in get_posts('konfliktyPL', pages=3, cookies='cookies.txt'):
-                embed = Embed(color=0x2ca5f1)
-                if post['image'] is not None:
-                    embed.set_image(url=post['image'])
-                embed.add_field(name=post['time'], value=post['text'])
-                embed.set_footer(text=post['post_id'])
-
-                await ctx.send(embed=embed)
-
-                counter += 1
-                if counter >= number_of_messages:
-                    break
-
     @commands.command(name='search',
                       brief='Searching for websites, which can help you solving your problem',
                       description='-> ".search [query]" - searches for query in Google')
