@@ -134,10 +134,7 @@ class Fun(commands.Cog):
                       description='-> ".meme" - sends a funny meme',
                       aliases=['memes', 'mem'])
     async def meme(self, ctx):
-        url = 'https://meme-api.herokuapp.com/gimme'
-        response = requests.get(url).json()
-        embed = Embed(title='Here you are!', color=0x2ca5f1)
-        embed.set_image(url=response['url'])
+        embed = embed_meme()
         await ctx.send(embed=embed)
 
     @commands.command(name='ping',
@@ -223,3 +220,12 @@ class Fun(commands.Cog):
 
 def setup(client):
     client.add_cog(Fun(client))
+
+
+def embed_meme():
+    url = 'https://meme-api.herokuapp.com/gimme'
+    response = requests.get(url).json()
+    embed = Embed(title='Here you are!', color=0x2ca5f1)
+    embed.set_image(url=response['url'])
+
+    return embed
