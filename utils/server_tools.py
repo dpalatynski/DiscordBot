@@ -32,6 +32,11 @@ class ServerTools(commands.Cog):
                     except discord.errors.NotFound:
                         pass
 
+    @commands.command(name='nicer',
+                      hidden=True)
+    async def nicer(self, ctx):
+        await ctx.send("https://cdn.discordapp.com/attachments/740336704061309110/999795055697076315/unknown.png")
+
 
 def setup(client):
     client.add_cog(ServerTools(client))
