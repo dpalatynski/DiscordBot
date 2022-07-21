@@ -8,7 +8,7 @@ class ServerTools(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.send_a_meme.start()
-        self.clear_messages.start()
+        #  self.clear_messages.start()  temporarily unavailable
 
     @tasks.loop(hours=4)
     async def send_a_meme(self):
