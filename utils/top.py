@@ -31,7 +31,7 @@ class Top(commands.Cog):
         print('Executing...')
 
         if channel == 'all':
-            await ctx.send(":warning: Warning! If you server is large enough,"
+            await ctx.send(":warning: Warning! If your server is large enough,"
                            " calculations could take few hours. :warning: ")
             for _channel in ctx.guild.text_channels:
                 async for message in _channel.history(limit=None):
