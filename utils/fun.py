@@ -63,8 +63,8 @@ class Fun(commands.Cog):
                       description='-> ".randint" - generates randomly 0 or 1 \n'
                                   '-> ".randint [min] [max]" - generates a random number in a given interval')
     async def randint(self, ctx, bottom=None, top=None):
-        if str(bottom).isdigit() and str(top).isdigit():
-            if top < bottom:
+        if str(bottom).replace('-', '').isdigit() and str(top).replace('-', '').isdigit():
+            if int(top) < int(bottom):
                 result = ':no_entry: The second number should be higher or equal than the first one.'
                 embed = Embed(color=0xff0000)
                 embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
