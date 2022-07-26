@@ -62,16 +62,26 @@ class Fun(commands.Cog):
                       brief='Get a random number',
                       description='-> ".randint" - generates randomly 0 or 1 \n'
                                   '-> ".randint [min] [max]" - generates a random number in a given interval')
-    async def randint(self, ctx, bottom=0, top=1):
-        if top < bottom:
-            result = ':no_entry: The second number should be higher or equal than the first one.'
-            embed = Embed(color=0xff0000)
-            embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
-        else:
-            bottom, top = int(bottom), int(top)
+    async def randint(self, ctx, bottom=None, top=None):
+        if str(bottom).isdigit() and str(top).isdigit():
+            if top < bottom:
+                result = ':no_entry: The second number should be higher or equal than the first one.'
+                embed = Embed(color=0xff0000)
+                embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
+            else:
+                bottom, top = int(bottom), int(top)
+                result = str(random.randint(bottom, top))
+                embed = Embed(color=0x2ca5f1)
+                embed.add_field(name='%s, your random number: ' % ctx.message.author.name, value=result)
+        elif bottom is None and top is None:
+            bottom, top = 0, 1
             result = str(random.randint(bottom, top))
             embed = Embed(color=0x2ca5f1)
             embed.add_field(name='%s, your random number: ' % ctx.message.author.name, value=result)
+        else:
+            result = ':no_entry: Type ".help randint" to see how to use randint function.'
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
 
         await ctx.send(embed=embed)
 
