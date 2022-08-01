@@ -58,6 +58,35 @@ class Fun(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name='number',
+                      brief='What this number means?',
+                      description='-> ".number [number]" - generates a random fact about number')
+    async def number(self, ctx, number):
+        if str(number).isdigit():
+            url = 'http://numbersapi.com/'
+            result = requests.get(url + str(number)).text
+            embed = Embed(color=0x2ca5f1)
+        elif '.' in number:
+            result = ':no_entry: Only an integer can be passed as argument of number function'
+            embed = Embed(color=0xff0000)
+        else:
+            result = ':no_entry: Type ".help number" to see how to use number function'
+            embed = Embed(color=0xff0000)
+
+        embed.add_field(name=f"What do you know about {number}?", value=result)
+        await ctx.send(embed=embed)
+
+    @number.error
+    async def number_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Warning', value=':warning: You need to pass an integer as argument to this function')
+        else:
+            embed = Embed(color=0xff0000)
+            embed.add_field(name='Error', value=':no_entry: I\'m unable to find information about this number')
+
+        await ctx.send(embed=embed)
+
     @commands.command(name='randint',
                       brief='Get a random number',
                       description='-> ".randint" - generates randomly 0 or 1 \n'
