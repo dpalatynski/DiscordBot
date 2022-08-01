@@ -61,28 +61,29 @@ class Fun(commands.Cog):
     @commands.command(name='randint',
                       brief='Get a random number',
                       description='-> ".randint" - generates randomly 0 or 1 \n'
-                                  '-> ".randint [min] [max]" - generates a random number in a given interval')
+                                  '-> ".randint [min] [max]" - generates a random integer from a given interval \n'
+                                  '\n Only integers can be passed as arguments')
     async def randint(self, ctx, bottom=None, top=None):
         if str(bottom).replace('-', '').isdigit() and str(top).replace('-', '').isdigit():
             if int(top) < int(bottom):
                 result = ':no_entry: The second number should be higher or equal than the first one.'
                 embed = Embed(color=0xff0000)
-                embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
             else:
                 bottom, top = int(bottom), int(top)
                 result = str(random.randint(bottom, top))
                 embed = Embed(color=0x2ca5f1)
-                embed.add_field(name='%s, your random number: ' % ctx.message.author.name, value=result)
         elif bottom is None and top is None:
             bottom, top = 0, 1
             result = str(random.randint(bottom, top))
             embed = Embed(color=0x2ca5f1)
-            embed.add_field(name='%s, your random number: ' % ctx.message.author.name, value=result)
+        elif '.' in bottom or '.' in top:
+            result = ':no_entry: Both numbers need to be integers!'
+            embed = Embed(color=0xff0000)
         else:
             result = ':no_entry: Type ".help randint" to see how to use randint function.'
             embed = Embed(color=0xff0000)
-            embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
 
+        embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
         await ctx.send(embed=embed)
 
     @commands.command(name='randword',
