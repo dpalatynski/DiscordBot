@@ -1,14 +1,15 @@
 from discord.ext import commands
 from utils.functions import check_for_channel
-import datetime
+from datetime import datetime, timedelta
 
-
-LOOKUP_TYPES = {'today': None,
-                'yesterday': None,
-                'week': None,
-                'month': None,
-                'year': None,
-                'all': None}
+START = datetime.today().replace(hour=0, minute=0, second=0)
+END = datetime.today().replace(hour=23, minute=59, second=59)
+LOOKUP_DAYS = {'today': 0,
+               'yesterday': 1,
+               'week': 7,
+               'month': 31,
+               'year': 365,
+               'all': None}
 
 
 class Top(commands.Cog):
@@ -32,34 +33,23 @@ class Top(commands.Cog):
                 channel = arg
             if arg.isdigit():
                 limit = int(arg)
-            if arg in LOOKUP_TYPES:
+            if arg in LOOKUP_DAYS:
                 lookup_type = arg
 
         messages = []
         members = set()
         results = []
 
-        if lookup_type == 'all':
-            for _channel in ctx.guild.text_channels:
-                async for message in _channel.history(limit=None):
-                    print(message.created_at)
-                    if message.created_at > datetime.datetime.today().replace(hour=0, minute=0, second=0):
-                        print(message.created_at)
-                        if message.author.bot is not True:
-                            members.add(message.author.id)
-                            messages.append(message.author.id)
-                    else:
-                        break
-        else:
-            _channel = self.client.get_channel(int(channel[2:-1])) if channel else ctx.channel
-            async for message in _channel.history(limit=None):
-                message_time = message.created_at + datetime.timedelta(hours=2)
-                if message_time > datetime.datetime.today().replace(hour=0, minute=0, second=0):
-                    if message.author.bot is not True:
-                        members.add(message.author.id)
-                        messages.append(message.author.id)
-                else:
-                    break
+        _channel = self.client.get_channel(int(channel[2:-1])) if channel else ctx.channel
+        async for message in _channel.history(limit=None):
+            message_time = message.created_at + timedelta(hours=2)
+            if (START - timedelta(days=LOOKUP_DAYS[lookup_type]) < message_time and
+                    message_time < END - timedelta(days=LOOKUP_DAYS[lookup_type])):
+                if message.author.bot is not True:
+                    members.add(message.author.id)
+                    messages.append(message.author.id)
+            elif START - timedelta(days=LOOKUP_DAYS[lookup_type]) > message_time:
+                break
 
         for member in members:
             counter = messages.count(member)
