@@ -1,6 +1,6 @@
 import discord.errors
 from discord.ext import commands, tasks
-from utils.fun import embed_meme
+from utils.fun import embed_meme, embed_meme_jbzd
 import datetime
 
 
@@ -15,7 +15,8 @@ class ServerTools(commands.Cog):
         for guild in self.client.guilds:
             if guild.id == 689108090653507616:
                 channel = self.client.get_channel(725784429691404329)
-                await channel.send(embed=embed_meme())
+                # await channel.send(embed=embed_meme())
+                await channel.send(embed=embed_meme_jbzd())
 
     @tasks.loop(hours=6)
     async def clear_messages(self):

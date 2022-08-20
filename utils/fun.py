@@ -177,6 +177,13 @@ class Fun(commands.Cog):
         embed = embed_meme()
         await ctx.send(embed=embed)
 
+    @commands.command(name='jbzd',
+                      brief='Finds meme from a website jbzd',
+                      description='-> ".jbzd" - sends a funny meme')
+    async def jbzd(self, ctx):
+        embed = embed_meme_jbzd()
+        await ctx.send(embed=embed)
+
     @commands.command(name='ping',
                       description='-> ".ping" - shows bot latency')
     async def ping(self, ctx):
@@ -267,5 +274,18 @@ def embed_meme():
     response = requests.get(url).json()
     embed = Embed(title='Here you are!', color=0x2ca5f1)
     embed.set_image(url=response['url'])
+
+    return embed
+
+
+def embed_meme_jbzd():
+    url = 'https://jbzd.com.pl/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, features="lxml")
+    images = soup.find_all("img", {"class": "article-image"})
+    img = random.choice(images)
+
+    embed = Embed(title='Here you are!', color=0x2ca5f1)
+    embed.set_image(url=img['src'])
 
     return embed
