@@ -2,14 +2,13 @@ from discord.ext import commands
 from utils.functions import check_for_channel
 from datetime import datetime, timedelta
 
-START = datetime.today().replace(hour=0, minute=0, second=0)
-END = datetime.today().replace(hour=23, minute=59, second=59)
-LOOKUP_DAYS = {'today': 0,
-               'yesterday': 1,
-               'week': 7,
-               'month': 31,
-               'year': 365,
-               'all': None}
+
+NOW = datetime.now()
+LOOKUP_DAYS = {'today': NOW.replace(hour=0, minute=0, second=0),
+               'week': NOW - timedelta(days=7),
+               'month': NOW - timedelta(days=31),
+               'year': NOW - timedelta(days=365),
+               'all': NOW - timedelta(days=7*365)}
 
 
 class Top(commands.Cog):
@@ -20,12 +19,10 @@ class Top(commands.Cog):
                       brief='Leaderboard of messages sent',
                       description='-> ".top" - returns a leaderboard of users with the most messages sent in '
                                   'this channel \n'
-                                  '-> ".top all" - returns a leaderboard of users with the most messages in this '
-                                  'server \n'
-                                  '-> ".top [channel] - returns a leaderboard of users with the most messages sent in '
-                                  'a mentioned channel \n'
-                                  '-> ".top [channel] [limit]" - returns a limited leaderboard of users with the most '
-                                  'messages sent in a mentioned channel \n')
+                                  '-> ".top [channel] [time] [limit]" - returns a limited leaderboard of users with '
+                                  'the most messages sent in a mentioned channel \n'
+                                  ' \n'
+                                  '[time] = [today|week|month|year|all]')
     async def top(self, ctx, *args):
         channel, limit, lookup_type = None, None, None
         for arg in args:
@@ -36,19 +33,17 @@ class Top(commands.Cog):
             if arg in LOOKUP_DAYS:
                 lookup_type = arg
 
-        messages = []
-        members = set()
-        results = []
+        messages, members, results = [], set(), []
 
+        lookup_type = 'all' if lookup_type is None else lookup_type
         _channel = self.client.get_channel(int(channel[2:-1])) if channel else ctx.channel
         async for message in _channel.history(limit=None):
             message_time = message.created_at + timedelta(hours=2)
-            if (START - timedelta(days=LOOKUP_DAYS[lookup_type]) < message_time and
-                    message_time < END - timedelta(days=LOOKUP_DAYS[lookup_type])):
+            if message_time > LOOKUP_DAYS[lookup_type]:
                 if message.author.bot is not True:
                     members.add(message.author.id)
                     messages.append(message.author.id)
-            elif START - timedelta(days=LOOKUP_DAYS[lookup_type]) > message_time:
+            else:
                 break
 
         for member in members:
