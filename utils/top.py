@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 NOW = datetime.now()
 LOOKUP_DAYS = {'today': NOW.replace(hour=0, minute=0, second=0),
+               'yesterday': NOW.replace(hour=0, minute=0, second=0) - timedelta(days=1),
                'week': NOW - timedelta(days=7),
                'month': NOW - timedelta(days=31),
                'year': NOW - timedelta(days=365),
@@ -24,27 +25,35 @@ class Top(commands.Cog):
                                   ' \n'
                                   '[time] = [today|week|month|year|all]')
     async def top(self, ctx, *args):
-        channel, limit, lookup_type = None, None, None
+        messages, members, results = [], set(), []  # variables to collect and keep information
+        _channel, limit, lookup_type = None, None, None  # details about query
+
         for arg in args:
             if check_for_channel(arg):
-                channel = arg
+                _channel = arg
             if arg.isdigit():
                 limit = int(arg)
             if arg in LOOKUP_DAYS:
                 lookup_type = arg
 
-        messages, members, results = [], set(), []
-
         lookup_type = 'all' if lookup_type is None else lookup_type
-        _channel = self.client.get_channel(int(channel[2:-1])) if channel else ctx.channel
-        async for message in _channel.history(limit=None):
+        channel = self.client.get_channel(int(_channel[2:-1])) if _channel else ctx.channel
+        async for message in channel.history(limit=None):
             message_time = message.created_at + timedelta(hours=2)
-            if message_time > LOOKUP_DAYS[lookup_type]:
-                if message.author.bot is not True:
-                    members.add(message.author.id)
-                    messages.append(message.author.id)
+            if lookup_type != 'yesterday':
+                if message_time > LOOKUP_DAYS[lookup_type]:
+                    if message.author.bot is not True:
+                        members.add(message.author.id)
+                        messages.append(message.author.id)
+                else:  # break if message was sent previous than lookup time
+                    break
             else:
-                break
+                if LOOKUP_DAYS[lookup_type] < message_time < LOOKUP_DAYS['today']:
+                    if message.author.bot is not True:
+                        members.add(message.author.id)
+                        messages.append(message.author.id)
+                elif LOOKUP_DAYS[lookup_type] > message_time:  # break if message was sent previous than lookup time
+                    break
 
         for member in members:
             counter = messages.count(member)
@@ -57,7 +66,7 @@ class Top(commands.Cog):
         results = sorted(results, key=lambda x: x[1], reverse=True)
         limit = int(limit) if (limit and 0 < int(limit) < len(results) and type(int(limit)) == int) else len(results)
 
-        messages = create_message(ctx, results, channel, _channel, lookup_type, limit)
+        messages = create_message(ctx, results, _channel, channel, lookup_type, limit)
 
         for message in messages:
             await ctx.send(message)
@@ -70,7 +79,7 @@ def setup(client):
 def create_message(ctx, results, channel, _channel, period, limit=None):
     messages = []
     period = 'all-time' if period == 'all' else period
-    period = 'last ' + period if period not in ['all-time', 'today'] else period
+    period = 'last ' + period if period not in ['all-time', 'today', 'yesterday'] else period
     if channel == 'all':
         reply = ":trophy: ** Most messages sent **in {} {} :trophy: \n ".format(ctx.guild.name, period)
     else:
