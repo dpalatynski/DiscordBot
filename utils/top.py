@@ -57,7 +57,7 @@ class Top(commands.Cog):
         results = sorted(results, key=lambda x: x[1], reverse=True)
         limit = int(limit) if (limit and 0 < int(limit) < len(results) and type(int(limit)) == int) else len(results)
 
-        messages = create_message(ctx, results, channel, _channel, '', limit)
+        messages = create_message(ctx, results, channel, _channel, lookup_type, limit)
 
         for message in messages:
             await ctx.send(message)
@@ -69,6 +69,8 @@ def setup(client):
 
 def create_message(ctx, results, channel, _channel, period, limit=None):
     messages = []
+    period = 'all-time' if period == 'all' else period
+    period = 'last ' + period if period not in ['all-time', 'today'] else period
     if channel == 'all':
         reply = ":trophy: ** Most messages sent **in {} {} :trophy: \n ".format(ctx.guild.name, period)
     else:
