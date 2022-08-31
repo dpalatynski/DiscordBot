@@ -181,7 +181,7 @@ class Fun(commands.Cog):
                       brief='Finds meme from a website jbzd',
                       description='-> ".jbzd" - sends a funny meme')
     async def jbzd(self, ctx):
-        embed = embed_meme_jbzd()
+        embed = embed_meme_saved_jbzd()
         await ctx.send(embed=embed)
 
     @commands.command(name='ping',
@@ -267,25 +267,3 @@ class Fun(commands.Cog):
 
 def setup(client):
     client.add_cog(Fun(client))
-
-
-def embed_meme():
-    url = 'https://meme-api.herokuapp.com/gimme'
-    response = requests.get(url).json()
-    embed = Embed(title='Here you are!', color=0x2ca5f1)
-    embed.set_image(url=response['url'])
-
-    return embed
-
-
-def embed_meme_jbzd():
-    url = 'https://jbzd.com.pl/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, features="lxml")
-    images = soup.find_all("img", {"class": "article-image"})
-    img = random.choice(images)
-
-    embed = Embed(title='Here you are!', color=0x2ca5f1)
-    embed.set_image(url=img['src'])
-
-    return embed
