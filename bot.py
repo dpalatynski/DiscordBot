@@ -1,8 +1,9 @@
-from discord.ext.commands import Bot
+from discord.ext import commands
 import discord
 import os
 from flask import Flask
 from threading import Thread
+import asyncio
 
 
 TOKEN = os.environ['BOT_TOKEN_DRACKS']
@@ -10,7 +11,13 @@ os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
 BOT_PREFIX = '.'
 
 intents = discord.Intents.all()
-client = Bot(command_prefix=BOT_PREFIX, intents=intents)
+intents.message_content = True
+
+client = commands.Bot(command_prefix=BOT_PREFIX,
+                      intents=intents,
+                      activity=discord.Activity(
+                                                type=discord.ActivityType.listening,
+                                                name=".help"))
 
 app = Flask("")
 
@@ -31,22 +38,21 @@ def keep_alive():
 
 @client.event
 async def on_ready():
-    client.load_extension("utils.messages")
-    client.load_extension("utils.members")
-    client.load_extension("utils.top")
-    client.load_extension("utils.fun")
-    client.load_extension("utils.stats")
-    client.load_extension("utils.admin")
-    client.load_extension("utils.reactions")
-    client.load_extension("utils.server_tools")
-    client.load_extension("utils.facebook")
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=".help"))
+    await client.load_extension("utils.messages")
+    await client.load_extension("utils.members")
+    await client.load_extension("utils.top")
+    await client.load_extension("utils.fun")
+    await client.load_extension("utils.stats")
+    await client.load_extension("utils.admin")
+    await client.load_extension("utils.reactions")
+    await client.load_extension("utils.facebook")
+    await client.load_extension("utils.server_tools")
 
 
-@client.command(hidden=True)
-async def load(ctx, extension):
-    client.load_extension(f'utils.{extension}')
+async def main():
+    await on_ready()
+    await client.start(TOKEN)
 
 
 keep_alive()
-client.run(TOKEN)
+asyncio.run(main())

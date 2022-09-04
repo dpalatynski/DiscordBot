@@ -72,8 +72,8 @@ class Top(commands.Cog):
             await ctx.send(message)
 
 
-def setup(client):
-    client.add_cog(Top(client))
+async def setup(client):
+    await client.add_cog(Top(client))
 
 
 def create_message(ctx, results, channel, _channel, period, limit=None):

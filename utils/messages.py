@@ -78,8 +78,8 @@ class Messages(commands.Cog):
             await message.add_reaction(numbers[i])
 
 
-def setup(client):
-    client.add_cog(Messages(client))
+async def setup(client):
+    await client.add_cog(Messages(client))
 
 
 def checkforuser(user_id):

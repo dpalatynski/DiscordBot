@@ -44,5 +44,5 @@ class Facebook(commands.Cog):
             await ctx.send(embed=embed)
 
 
-def setup(client):
-    client.add_cog(Facebook(client))
+async def setup(client):
+    await client.add_cog(Facebook(client))

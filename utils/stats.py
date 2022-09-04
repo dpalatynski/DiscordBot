@@ -104,8 +104,8 @@ class Stats(commands.Cog):
             await ctx.send(embed=embed)
 
 
-def setup(client):
-    client.add_cog(Stats(client))
+async def setup(client):
+    await client.add_cog(Stats(client))
 
 
 def create_table_statistics(url, table_name, starting_row):
