@@ -1,6 +1,6 @@
 import discord.errors
 from discord.ext import commands, tasks
-from utils.fun import embed_meme, embed_meme_jbzd
+from utils.functions import embed_meme, embed_meme_jbzd
 import datetime
 
 
