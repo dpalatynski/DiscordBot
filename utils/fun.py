@@ -4,8 +4,8 @@ import requests
 import asyncio
 import random
 from bs4 import BeautifulSoup
-from facebook_scraper import get_posts
 from googlesearch import search
+from utils.functions import embed_meme, embed_meme_saved_jbzd
 
 
 class Fun(commands.Cog):
