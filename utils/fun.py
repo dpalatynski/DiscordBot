@@ -112,7 +112,7 @@ class Fun(commands.Cog):
             result = ':no_entry: Type ".help randint" to see how to use randint function.'
             embed = Embed(color=0xff0000)
 
-        embed.add_field(name='%s, error: ' % ctx.message.author.name, value=result)
+        embed.add_field(name='%s, your random number: ' % ctx.message.author.name, value=result)
         await ctx.send(embed=embed)
 
     @commands.command(name='randword',
