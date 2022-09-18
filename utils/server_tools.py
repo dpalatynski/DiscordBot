@@ -12,6 +12,7 @@ class ServerTools(commands.Cog):
 
     @tasks.loop(hours=4)
     async def send_a_meme(self):
+        await self.client.wait_until_ready()
         for guild in self.client.guilds:
             if guild.id == 689108090653507616:
                 channel = self.client.get_channel(725784429691404329)
