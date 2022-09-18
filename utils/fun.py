@@ -256,7 +256,7 @@ class Fun(commands.Cog):
     async def wikipedia(self, ctx):
         url = 'https://en.wikipedia.org/wiki/Special:Random'
         response = requests.get(url)
-        soup = BeautifulSoup(response.text)
+        soup = BeautifulSoup(response.text, features="lxml")
         title = soup.find('title').text.replace('- Wikipedia', '')
 
         embed = Embed(color=0x2ca5f1)

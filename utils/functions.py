@@ -1,4 +1,3 @@
-from pathlib import Path
 from discord import Embed
 import requests
 from bs4 import BeautifulSoup
@@ -40,13 +39,12 @@ def embed_meme_jbzd():
 
     embed = Embed(title='Here you are!', color=0x2ca5f1)
     embed.set_image(url=img['src'])
-    print('b')
 
     return embed
 
 
 def embed_meme_saved_jbzd():
-    with open(str(Path(os.getcwd()).parent) + r"\Discord\configs\meme_urls.txt", "r") as file:
+    with open(str(os.getcwd()) + r"\configs\meme_urls.txt", "r") as file:
         current_urls = file.readlines()
     img = random.choice(current_urls)
 
@@ -57,9 +55,9 @@ def embed_meme_saved_jbzd():
 
 
 def save_meme_url_to_file(url):
-    with open(str(Path(os.getcwd()).parent) + r"\Discord\configs\meme_urls.txt", "r") as file:
+    with open(str(os.getcwd()) + r"configs\meme_urls.txt", "r") as file:
         current_urls = file.readlines()
 
     if url + '\n' not in current_urls:
-        with open(str(Path(os.getcwd()).parent) + r"\Discord\configs\meme_urls.txt", "a") as file:
+        with open(str(os.getcwd()) + r"configs\meme_urls.txt", "a") as file:
             file.write(url + '\n')

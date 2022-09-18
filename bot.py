@@ -45,7 +45,7 @@ async def on_ready():
     await client.load_extension("utils.stats")
     await client.load_extension("utils.admin")
     await client.load_extension("utils.reactions")
-    await client.load_extension("utils.facebook")
+    # await client.load_extension("utils.facebook")  <- turned off for maintenance
     await client.load_extension("utils.server_tools")
 
 

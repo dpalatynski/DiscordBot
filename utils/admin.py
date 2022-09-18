@@ -58,7 +58,8 @@ class Admin(commands.Cog):
     @commands.command(name='deletemessages',
                       brief='Delete last x messages',
                       description='-> ".delemessages [number]" - deletes a specified number of messages in '
-                                  'current channel')
+                                  'a current channel',
+                      aliases=['dlmsg', 'dmsg', 'delmsg'])
     @commands.has_permissions(administrator=True)
     async def deletemessages(self, ctx, number):
         if int(number) > 51:

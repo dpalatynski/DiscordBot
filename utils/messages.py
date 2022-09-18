@@ -57,7 +57,7 @@ class Messages(commands.Cog):
         await ctx.send(embed=embed)
 
     @messages.error
-    async def messages_eror(self, ctx, error):
+    async def messages_error(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: I can\'t count the number of messages right now.')

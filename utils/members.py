@@ -40,7 +40,7 @@ class Members(commands.Cog):
         if user is None:
             user = ctx.message.author
         embed = Embed(title=user.display_name, color=0x2ca5f1)
-        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_thumbnail(url=user.display_avatar)
         embed.add_field(name='Nickname', value=user.name + '#' + user.discriminator, inline=False)
         embed.add_field(name='Joined At', value=user.joined_at.date())
         embed.add_field(name='Created At', value=user.created_at.date())
@@ -54,7 +54,7 @@ class Members(commands.Cog):
         await ctx.send(embed=embed)
 
     @user.error
-    async def user_eror(self, ctx, error):
+    async def user_error(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Unable to find information about this account.')
@@ -69,13 +69,13 @@ class Members(commands.Cog):
         if user is None:
             user = ctx.message.author
         embed = Embed(title=user.display_name, color=0x2ca5f1)
-        embed.set_image(url=user.avatar_url)
+        embed.set_image(url=user.adisplay_avatar)
         embed.set_footer(text=user.name + '#' + user.discriminator)
 
         await ctx.send(embed=embed)
 
     @avatar.error
-    async def avatar_eror(self, ctx, error):
+    async def avatar_error(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Unable to look at this avatar.')
@@ -92,7 +92,7 @@ class Members(commands.Cog):
         await ctx.send(embed=embed)
 
     @roles.error
-    async def roles_eror(self, ctx, error):
+    async def roles_error(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Unable to display roles.')
@@ -107,7 +107,7 @@ class Members(commands.Cog):
         await ctx.channel.send("I'm taking care of " + str(no_of_servers) + " servers!")
 
     @servers.error
-    async def servers_eror(self, ctx, error):
+    async def servers_error(self, ctx, error):
         if error:
             embed = Embed(color=0xff0000)
             embed.add_field(name='Error', value=':no_entry: Something went wrong. Please try again later.')
